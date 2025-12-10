@@ -23,18 +23,18 @@ import SwiftUI
  
  This is what is happening
  
-        -----------
-1:              |         Hello        |
-        -----------
-        -----------
-2:              |    y   Hello   y    |
-        -----------
+      -----------
+1:   |   Hello   |
+      -----------
+      -----------
+2:   | y Hello y |
+      -----------
  
-        -------------
-       |   -----------------    |
-3:             |   |  y    Hello  y  |    |
-       |   -----------------    |
-       --------------
+   |--------------------|
+   |  ----------------- |
+3: | |   y  Hello  y  | |
+   |  ----------------- |
+   |--------------------|
  
  When we colour the back ground before adding padding we end up only colouring the text box rather than the entire padded box. Leading to the backgournd colour looking small and only around the text. To fix this you change the order.
  
