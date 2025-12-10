@@ -1,0 +1,187 @@
+
+Customize views with properties:
+
+Structures are a way to organize your code so that related pieces are packaged together. Every structure has a name that lets you reuse it like a template anywhere in your app. With structures, you can write code that is more efficient and has fewer errors.
+
+
+ 
+ 1: Prototype
+ 
+ Create a simple interface to display two weather forecasts. Notice the repeated pattern in the interface.
+ 
+ > To view the available SF Symbols, choose the Show Library button in the toolbar, then select the Show the Symbols Library button. You can also use the SF Symbols app.
+ 
+ > You use the .foregroundStyle modifier to apply a color to the foreground elements of any view. For example, setting a color as the foreground style of a Text view changes the color of the text.
+ 
+ > An HStack is a container view that arranges views horizontally. A VStack arranges the views it contains vertically. (Control-clicking the VStack and choosing Embed in HStack.)
+ 
+ Code:
+ 
+         struct ContentView: View {
+            var body: some View {
+                HStack { // Allows for each VStack to be side by side
+                    VStack {
+                        Text("Monday")
+                        Image(systemName: "sun.snow.fill")
+                            .foregroundStyle(Color.cyan)
+                        Text("High: 2")
+                        Text("Low: -1")
+                    }
+                    
+                    VStack {
+                        Text("Tuesday")
+                        Image(systemName: "sun.max.fill")
+                            .foregroundStyle(Color.yellow)
+                        Text("High: 4")
+                        Text("Low: 0")
+                    }
+                    .padding()
+                }
+            }
+        }
+         
+ 
+ 
+ 
+ 2: Create a custom subview
+
+Instead of continuing to copy and paste your code, learn how to encapsulate a day’s forecast in its own structure to make a customizable forecast card.
+
+> You define — or declare — a structure using the struct keyword.
+
+> A subview is a view used inside another view. For example, in the default code for a new project, Text and Image are subviews of ContentView.
+
+> Now that a DayForecast view is created, you can use it for each day’s forecast instead of repeating the code.
+
+Code:
+        struct ContentView: View {
+            var body: some View {
+                HStack { // Allows for each VStack to be side by side
+                    
+                    // Display the structure as a subview of ContentView.
+                    DayForecast()
+                    
+                    DayForecast()
+                    
+                    .padding()
+                }
+            }
+        }
+
+        struct DayForecast: View {
+            var body: some View {
+                VStack {
+                    Text("Mon")
+                    Image(systemName: "sun.max.fill")
+                        .foregroundStyle(Color.yellow)
+                    Text("High: 70")
+                    Text("Low: 50")
+                }
+                .padding()
+            }
+        }
+
+3: Generalize the day with a property
+
+You can use properties to display any forecast data using your custom view. Start by making the day of the week customizable.
+
+> Let's take a look at the property that was just created in the code:
+    
+    let day: String
+    -> To declare a property, use the let keyword.
+    -> A property has a name, followed by a colon and the kind of data it holds
+    -> day is the name and the kind of data it stores in a String
+    
+> In Swift, kinds of data are called types. You can read the code you added to the DayForecast structure like this: “day is a property whose type is String.” Or you could say, “day is a property of type String.”
+
+> When you add a property to a structure, you need to give it a value every time you create an instance of the structure. This error means that you haven’t given the day property a value.
+
+    -> You’re calling the initializer for DayForecast and passing a String argument for the day parameter.
+    
+> Let's take a look at how the string value journeys from your ContentView code into an instance of DayForecast and from there to your interface.
+
+Code:
+
+        struct ContentView: View {
+            var body: some View {
+            ...
+
+                    DayForecast(day: "Mon") // Sets day to "Mon" (String)
+                    
+            ...
+        }
+
+            struct DayForecast: View {
+            
+            let day: String
+            
+            var body: some View {
+                VStack {
+                    Text(day) // Passes "Mon" value into the Text view using the property as an argument
+                    Image(systemName: "sun.max.fill")
+                        .foregroundStyle(Color.yellow)
+                    Text("High: 70")
+                    Text("Low: 50")
+                }
+                .padding()
+            }
+        }
+
+4: Use Int to display temperatures
+
+Generalize the temperature range display in DayForecast. Add properties to represent temperatures as numbers — using a new type, Int — then, use string interpolation to display the temperatures in a Text view.
+
+Code:
+        struct DayForecast: View {
+            
+            let day: String // Adds a property to store the day of the week
+            let high: Int
+            let low: Int
+            
+            var body: some View {
+                VStack {
+                    Text(day) // Passes the data in day which is a String
+                    Image(systemName: "sun.max.fill")
+                        .foregroundStyle(Color.yellow)
+                    Text(high) // Error
+                    Text(low) // Error
+                }
+                .padding()
+            }
+        }
+
+ -> “No exact matches in call to initializer,” because there’s no way to initialize a Text view with a numeric value. You need a way to convert a number to a string to pass into the Text initializer. You can use string interpolation to do just that.
+ -> If you want to display the value of a number in a text view, which expects a String, you have to change the number into a string, which you do like this: "\(number)".
+ 
+        ->  Text("\(high)")
+        
+5: Use computed properties for the icon and color
+
+Add another property that uses a Boolean, a value that is either true or false, to compute what appears in the image view. Show a rain cloud if the value is true and a sun if it’s false.
+
+> The order of parameters in the initializer matches the order of declaration of their matching properties, so you can’t add the new arguments at the end, as you did before.
+> A computed property doesn’t store a value directly like the stored properties you declared earlier using let. Computed properties use the var keyword because their value may vary depending on the results of the computation.
+> Code that computes a value must provide the value using the return keyword. (Accessor is another name for a computed property.)
+
+Code:
+
+        var iconName: String {
+                if isRainy {
+                    return "cloud.rain.fill"
+                } else {
+                    return "sun.max.fill"
+                }
+            }
+    -> If the condition is true, Swift executes the code in the braces following the if. If the condition is false, Swift executes the code in the braces following the else keyword.
+
+
+
+
+
+
+
+
+
+
+
+
